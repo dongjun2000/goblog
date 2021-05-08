@@ -37,24 +37,18 @@ func aritclesIndexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func articlesCreateHandler(w http.ResponseWriter, r *http.Request) {
-	html := `
-<!DOCTYPE html>
-<html lang="zh">
-	<head>
-		<title>创建文章 —— 我的技术博客</title>
-	</head>
-	<body>
-		<form action="%s?test=data" method="post">
-			<h1>创建文章</h1>
-			<p><input type="text" name="title"></p>
-			<p><textarea name="body" cols="30" rows="10"></textarea></p>
-			<p><button type="submit">提交</button></p>
-		</form>
-	</body>
-</html>
-`
 	storeURL, _ := router.Get("articles.store").URL()
-	fmt.Fprintf(w, html, storeURL)
+	data := ArticlesFormData{
+		Title: "",
+		Body: "",
+		URL: storeURL,
+		Errors: nil,
+	}
+	tmpl, err := template.ParseFiles("resources/views/articles/create.gohtml")
+	if err != nil {
+		panic(err)
+	}
+	tmpl.Execute(w, data)
 }
 
 // ArticlesFormData 创建博文表单数据
@@ -92,33 +86,6 @@ func articlesStoreHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "body的值为：%v <br>", body)
 		fmt.Fprintf(w, "body的值为：%v <br>", utf8.RuneCountInString(body))
 	} else {
-		fmt.Fprintf(w, "有错误发生，errors的值为：%v <br>", errors)
-		fmt.Fprintf(w, "title：%v <br>", errors["title"])
-		fmt.Fprintf(w, "body: %v <br>", errors["body"])
-
-		html := `
-<!DOCTYPE html>
-<html lang="zh">
-	<head>
-		<title>创建文章 —— 我的技术博客</title>
-		<style type="text/css">.error {color:red;}</style>
-	</head>
-	<body>
-		<form action="{{ .URL }}" method="post">
-			<h1>创建文章</h1>
-			<p><input type="text" name="title" value="{{ .Title }}"></p>
-			{{ with .Errors.title }}
-			<p class="error">{{ . }}</p>
-			{{ end }}
-			<p><textarea name="body" cols="30" rows="10">{{ .Body }}</textarea></p>
-			{{ with .Errors.body }}
-			<p class="error">{{ . }}</p>
-			{{ end }}
-			<p><button type="submit">提交</button></p>
-		</form>
-	</body>
-</html>
-`
 		storeURL, _ := router.Get("articles.store").URL()
 		data := ArticlesFormData{
 			Title:  title,
@@ -126,7 +93,7 @@ func articlesStoreHandler(w http.ResponseWriter, r *http.Request) {
 			URL:    storeURL,
 			Errors: errors,
 		}
-		tmpl, err := template.New("create-form").Parse(html)
+		tmpl, err := template.ParseFiles("resources/views/articles/create.gohtml")
 		if err != nil {
 			panic(err)
 		}
