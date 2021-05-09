@@ -48,6 +48,17 @@ func initDB() {
 	checkError(err)
 }
 
+func createTables() {
+	createArticlesSQL := `CREATE TABLE IF NOT EXISTS articles(
+		id bigint PRIMARY KEY AUTO_INCREMENT NOT NULL,
+		title varchar(255) NOT NULL,
+		body longtext
+);`
+
+	_, err := db.Exec(createArticlesSQL)
+	checkError(err)
+}
+
 func checkError(err error) {
 	if err != nil {
 		log.Fatal(err)
@@ -166,6 +177,7 @@ func removeTrailingSlash(next http.Handler) http.Handler {
 
 func main() {
 	initDB()
+	createTables()
 
 	router.HandleFunc("/", homeHandler).Methods("GET").Name("home")
 	router.HandleFunc("/about", aboutHandler).Methods("GET").Name("about")
