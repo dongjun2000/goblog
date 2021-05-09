@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"html/template"
 	"net/http"
@@ -39,9 +40,9 @@ func aritclesIndexHandler(w http.ResponseWriter, r *http.Request) {
 func articlesCreateHandler(w http.ResponseWriter, r *http.Request) {
 	storeURL, _ := router.Get("articles.store").URL()
 	data := ArticlesFormData{
-		Title: "",
-		Body: "",
-		URL: storeURL,
+		Title:  "",
+		Body:   "",
+		URL:    storeURL,
 		Errors: nil,
 	}
 	tmpl, err := template.ParseFiles("resources/views/articles/create.gohtml")
