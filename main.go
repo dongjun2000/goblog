@@ -75,10 +75,41 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 		"<a href=\"mailto:summer@example.com\">summer@example.com</a>")
 }
 
+// Article 对应一条文章数据
+type Article struct {
+	Title, Body string
+	ID          int64
+}
+
 func articlesShowHandler(w http.ResponseWriter, r *http.Request) {
+	// 1. 获取URL参数
 	vars := mux.Vars(r)
 	id := vars["id"]
-	fmt.Fprint(w, "文章ID："+id)
+
+	// 2. 读取对应的文章数据
+	article := Article{}
+	query := "SELECT * FROM articles WHERE id = ?"
+	err := db.QueryRow(query, id).Scan(&article.ID, &article.Title, &article.Body)
+
+	// 3. 如果出现错误
+	if err != nil {
+		if err == sql.ErrNoRows {
+			// 3.1 数据未找到
+			w.WriteHeader(http.StatusNotFound)
+			fmt.Fprint(w, "404 文章未找到")
+		} else {
+			// 3.2 数据库错误
+			checkError(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprint(w, "500 服务器内部错误")
+		}
+	} else {
+		// 4. 读取成功，显示文章
+		tmpl, err := template.ParseFiles("resources/views/articles/show.gohtml")
+		checkError(err)
+
+		tmpl.Execute(w, article)
+	}
 }
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
@@ -136,7 +167,7 @@ func articlesStoreHandler(w http.ResponseWriter, r *http.Request) {
 	if len(errors) == 0 {
 		lastInsertID, err := saveArticleToDB(title, body)
 		if lastInsertID > 0 {
-			fmt.Fprint(w, "插入成功，ID为" + strconv.FormatInt(lastInsertID, 10))
+			fmt.Fprint(w, "插入成功，ID为"+strconv.FormatInt(lastInsertID, 10))
 		} else {
 			checkError(err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -161,9 +192,9 @@ func articlesStoreHandler(w http.ResponseWriter, r *http.Request) {
 func saveArticleToDB(title string, body string) (int64, error) {
 	// 变量初始化
 	var (
-		id int64
-		err error
-		rs sql.Result
+		id   int64
+		err  error
+		rs   sql.Result
 		stmt *sql.Stmt
 	)
 
