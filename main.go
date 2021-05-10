@@ -89,6 +89,11 @@ func articlesShowHandler(w http.ResponseWriter, r *http.Request) {
 	// 2. 读取对应的文章数据
 	article := Article{}
 	query := "SELECT * FROM articles WHERE id = ?"
+
+	//stmt, err := db.Prepare(query)
+	//checkError(err)
+	//defer stmt.Close()
+	//stmt.QueryRow(id).Scan(&article.ID, &article.Title, &article.Body)
 	err := db.QueryRow(query, id).Scan(&article.ID, &article.Title, &article.Body)
 
 	// 3. 如果出现错误
