@@ -2,7 +2,9 @@
 <html lang="zh">
 <head>
     <title>编辑文章 —— 我的技术博客</title>
-    <style type="text/css">.error {color:red;}</style>
+    <style type="text/css">.error {
+        color: red;
+    }</style>
 </head>
 <body>
 <form action="{{ .URL }}" method="post">
@@ -15,7 +17,9 @@
 {{ with .Errors.body }}
     <p class="error">{{ . }}</p>
 {{ end }}
-    <p><button type="submit">提交</button></p>
+    <p>
+        <button type="submit">提交</button>
+    </p>
 </form>
 </body>
 </html>
