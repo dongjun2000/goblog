@@ -10,6 +10,7 @@ import (
 func RegisterWebRoutes(r *mux.Router) {
 
 	pc := new(controllers.PagesController)
+	ac := new()
 
 	// 静态页面
 	r.HandleFunc("/", pc.Home).Methods("GET").Name("home")
