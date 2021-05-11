@@ -418,8 +418,6 @@ func main() {
 	route.Initialize()
 	router = route.Router
 
-	router.HandleFunc("/", homeHandler).Methods("GET").Name("home")
-	router.HandleFunc("/about", aboutHandler).Methods("GET").Name("about")
 	router.HandleFunc("/articles/{id:[0-9]+}", articlesShowHandler).Methods("GET").Name("articles.show")
 	router.HandleFunc("/articles", aritclesIndexHandler).Methods("GET").Name("articles.index")
 	router.HandleFunc("/articles", articlesStoreHandler).Methods("POST").Name("articles.store")
@@ -428,16 +426,8 @@ func main() {
 	router.HandleFunc("/articles/{id:[0-9]+}", articlesUpdateHandler).Methods("POST").Name("articles.update")
 	router.HandleFunc("/articles/{id:[0-9]+}/delete", articlesDeleteHandler).Methods("POST").Name("articles.delete")
 
-	// 自定义404页面
-	router.NotFoundHandler = http.HandlerFunc(notFoundHandler)
-
 	// 中间件：强制内容类型为 HTML
 	router.Use(forceHTMLMiddleware)
-
-	homeURL, _ := router.Get("home").URL()
-	fmt.Println(homeURL)
-	articleURL, _ := router.Get("articles.show").URL("id", "123")
-	fmt.Println(articleURL)
 
 	http.ListenAndServe(":3000", removeTrailingSlash(router))
 }
