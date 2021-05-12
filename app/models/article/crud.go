@@ -23,3 +23,14 @@ func (article *Article) Update() (rowsAffected int64, err error) {
 
 	return result.RowsAffected, nil
 }
+
+// Delete 方法用于从数据库中删除单条数据
+func (article Article) Delete() (rowsAffected int64, err error) {
+	result := model.DB.Delete(&article)
+	if err = result.Error; err != nil {
+		logger.LogError(err)
+		return 0, err
+	}
+
+	return result.RowsAffected, nil
+}
