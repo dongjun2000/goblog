@@ -5,10 +5,16 @@ import (
 	"net/http"
 )
 
+var router *mux.Router
+
+// 设置路由实例，以供 Name2URL 等函数使用
+func SetRoute(r *mux.Router) {
+	router = r
+}
+
 // 通过路由名称来获取URL
 func Name2URL(routeName string, paris ...string) string {
-	var Router *mux.Router
-	url, err := Router.Get(routeName).URL(paris...)
+	url, err := router.Get(routeName).URL(paris...)
 	if err != nil {
 		//checkError(err)
 		return ""
