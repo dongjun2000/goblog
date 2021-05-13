@@ -17,7 +17,6 @@ func (*PagesController) Home(w http.ResponseWriter, r *http.Request) {
 
 // 关于我们
 func (*PagesController) About(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "")
 	view.Render(w, nil, "pages.about")
 }
 
