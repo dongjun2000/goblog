@@ -12,6 +12,12 @@ func RegisterWebRoutes(r *mux.Router) {
 	pc := new(controllers.PagesController)
 	ac := new(controllers.ArticlesController)
 
+	auc := new(controllers.AuthController)
+
+	// 登录注册
+	r.HandleFunc("/register", auc.Register).Methods("GET").Name("auth.register")
+	r.HandleFunc("/do-register", auc.DoRegister).Methods("POST").Name("auth.doregister")
+
 	// 文章相关页面
 	r.HandleFunc("/articles/{id:[0-9]+}", ac.Show).Methods("GET").Name("articles.show")
 	r.HandleFunc("/articles", ac.Index).Methods("GET").Name("articles.index")
