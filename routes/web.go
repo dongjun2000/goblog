@@ -15,11 +15,15 @@ func RegisterWebRoutes(r *mux.Router) {
 
 	auc := new(controllers.AuthController)
 
+	// 首页
+	r.HandleFunc("/", ac.Index).Methods("GET").Name("home")
+
 	// 登录注册
 	r.HandleFunc("/register", auc.Register).Methods("GET").Name("auth.register")
 	r.HandleFunc("/do-register", auc.DoRegister).Methods("POST").Name("auth.doregister")
 	r.HandleFunc("/login", auc.Login).Methods("GET").Name("auth.login")
 	r.HandleFunc("/dologin", auc.DoLogin).Methods("POST").Name("auth.dologin")
+	r.HandleFunc("/logout", auc.Logout).Methods("GET").Name("auth.logout")
 
 	// 文章相关页面
 	r.HandleFunc("/articles/{id:[0-9]+}", ac.Show).Methods("GET").Name("articles.show")
@@ -31,8 +35,8 @@ func RegisterWebRoutes(r *mux.Router) {
 	r.HandleFunc("/articles/{id:[0-9]+}/delete", ac.Delete).Methods("POST").Name("articles.delete")
 
 	// 静态页面
-	r.HandleFunc("/", pc.Home).Methods("GET").Name("home")
 	r.HandleFunc("/about", pc.About).Methods("GET").Name("about")
+
 	// 404
 	r.NotFoundHandler = http.HandlerFunc(pc.NotFound)
 

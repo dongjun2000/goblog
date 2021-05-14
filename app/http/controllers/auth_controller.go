@@ -69,3 +69,7 @@ func (*AuthController) DoLogin(w http.ResponseWriter, r *http.Request) {
 		}, "auth.login")
 	}
 }
+
+func (*AuthController) Logout(w http.ResponseWriter, r *http.Request) {
+
+}
