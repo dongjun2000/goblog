@@ -44,6 +44,7 @@ func Get(key string) interface{} {
 // 删除某个会话项
 func Forget(key string) {
 	delete(Session.Values, key)
+	Save()
 }
 
 // 删除当前会话

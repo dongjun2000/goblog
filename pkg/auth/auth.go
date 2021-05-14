@@ -9,6 +9,7 @@ import (
 
 func _getUID() string {
 	_uid := session.Get("uid")
+
 	uid, ok := _uid.(string)
 	if ok && len(uid) > 0 {
 		return uid

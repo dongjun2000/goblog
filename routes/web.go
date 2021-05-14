@@ -23,7 +23,7 @@ func RegisterWebRoutes(r *mux.Router) {
 	r.HandleFunc("/do-register", auc.DoRegister).Methods("POST").Name("auth.doregister")
 	r.HandleFunc("/login", auc.Login).Methods("GET").Name("auth.login")
 	r.HandleFunc("/dologin", auc.DoLogin).Methods("POST").Name("auth.dologin")
-	r.HandleFunc("/logout", auc.Logout).Methods("GET").Name("auth.logout")
+	r.HandleFunc("/logout", auc.Logout).Methods("POST").Name("auth.logout")
 
 	// 文章相关页面
 	r.HandleFunc("/articles/{id:[0-9]+}", ac.Show).Methods("GET").Name("articles.show")
