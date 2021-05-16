@@ -138,7 +138,7 @@ func (*ArticlesController) Update(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprintf(w, "500 服务器内部错误")
 				return
 			}
-			fmt.Println(rowsAffected)
+
 			// √ 更新成功，跳转到文章详情页
 			if rowsAffected > 0 {
 				showURL := route.Name2URL("articles.show", "id", id)
